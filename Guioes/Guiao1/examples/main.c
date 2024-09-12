@@ -1,22 +1,19 @@
 // main.c
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "stack.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-void printInt(void *i)
-{
+void printInt(void *i) {
     int *i_ = i;
     printf("%d", *i_);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     srand(time(NULL)); // seed do random, para ser diferente a cada run
 
     Stack *s = stackCreate(&printInt);
-    for (int i = 0; i < 5; i++)
-    {
+    for (int i = 0; i < 5; i++) {
         stackPrint(s);
         int *i = malloc(sizeof(int));
         *i = rand() % 100; // [0, 100[
@@ -27,9 +24,9 @@ int main(int argc, char **argv)
     int *i;
     // termina quando retornar NULL, ou seja,
     // n~ao existe mais elementos para remover
-    while (i = stackPop(s))
-    {
-        free(i); //  ́e preciso libertar os dados pois stackPop liberta apenas o n ́o
+    while (i = stackPop(s)) {
+        free(i); //  ́e preciso libertar os dados pois stackPop liberta apenas o
+                 //  n ́o
         stackPrint(s);
     }
 

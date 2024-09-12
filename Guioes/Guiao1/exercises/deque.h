@@ -9,14 +9,12 @@
 
 // Data structures
 
-typedef struct d_list
-{
+typedef struct d_list {
     void *data;
     struct d_list *before, *next;
 } D_List;
 
-typedef struct deque
-{
+typedef struct deque {
     int size;
     D_List *back, *front;
     // void (*elemPrint)(void *);

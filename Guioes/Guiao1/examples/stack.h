@@ -4,8 +4,7 @@
 
 #include "node.h"
 
-typedef struct stack
-{
+typedef struct stack {
     int size;
     Node *top;
     void (*elemPrint)(void *); // fun ̧c~ao para imprimir um elemento da stack

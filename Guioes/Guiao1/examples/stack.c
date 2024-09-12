@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Stack *stackCreate(void (*elemPrint)(void *))
-{
+Stack *stackCreate(void (*elemPrint)(void *)) {
     Stack *stack = malloc(sizeof(Stack));
     stack->size = 0;
     stack->top = 0; // mesmo que NULL
@@ -13,18 +12,15 @@ Stack *stackCreate(void (*elemPrint)(void *))
     return stack;
 }
 
-void stackPush(Stack *stack, void *data)
-{
+void stackPush(Stack *stack, void *data) {
     Node *node = nodeCreate(data);
     node->next = stack->top;
     stack->top = node;
     stack->size++;
 }
 
-void *stackPop(Stack *stack)
-{
-    if (stack->size == 0)
-    {
+void *stackPop(Stack *stack) {
+    if (stack->size == 0) {
         return 0; // mesmo que NULL
     }
 
@@ -36,11 +32,9 @@ void *stackPop(Stack *stack)
     return data;
 }
 
-void stackPrint(Stack *stack)
-{
+void stackPrint(Stack *stack) {
     Node *top = stack->top;
-    while (top)
-    {
+    while (top) {
         stack->elemPrint(top->data);
         printf(" -> ");
         top = top->next;
