@@ -2,10 +2,7 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
-#include <assert.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 // Data structures
 
@@ -17,7 +14,6 @@ typedef struct d_list {
 typedef struct deque {
     int size;
     D_List *back, *front;
-    // void (*elemPrint)(void *);
 } Deque;
 
 // Function declarations

@@ -1,6 +1,9 @@
 /* deque.c */
 
 #include "deque.h"
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 Deque *create() {
     Deque *new = calloc(1, sizeof(Deque));
@@ -30,6 +33,7 @@ void push(Deque *deque, void *data) {
     if (deque->back == NULL && deque->front == NULL) {
         deque->back = deque->front = new_node;
         deque->size++;
+        return;
     }
 
     /*          QUESTION
@@ -41,6 +45,7 @@ void push(Deque *deque, void *data) {
     deque->back->next = new_node;
     new_node->before = deque->back;
     deque->back = new_node;
+    deque->size++;
 }
 
 void pushFront(Deque *deque, void *data) {
@@ -49,60 +54,64 @@ void pushFront(Deque *deque, void *data) {
     if (deque->back == NULL && deque->front == NULL) {
         deque->back = deque->front = new_node;
         deque->size++;
+        return;
     }
 
-    deque->front->next = new_node;
-    new_node->before = deque->front;
+    deque->front->before = new_node;
+    new_node->next = deque->front;
     deque->front = new_node;
+    deque->size++;
 }
 
 void *pop(Deque *deque) {
     if (isEmpty(deque))
         return NULL;
 
+    D_List *temp = deque->back;
+    deque->back = temp->before;
+    deque->back->next = NULL;
+
     // if there is only one element, I have to change the front too
     if (deque->size == 1) {
-        Deque *temp = deque->back;
-        deque->back = deque->back->before; // == NULL
         deque->front = deque->front->next; // == NULL
-
-        // QUESTION: return the node or just the data ??
-        return temp;
+        deque->front->before = NULL;       // necessary ????
     }
 
-    Deque *temp = deque->back;
-    deque->back = deque->back->before;
+    void *temp_data = temp->data;
+    free(temp);
+    deque->size--;
 
-    return temp;
+    return temp_data;
 }
 
 void *popFront(Deque *deque) {
     if (isEmpty(deque))
         return NULL;
 
-    // if there is only one element, I have to change the front too
-    if (deque->size == 1) {
-        Deque *temp = deque->back;
-        deque->front = deque->front->next; // == NULL
-        deque->back = deque->back->before; // == NULL
+    D_List *temp = deque->front;
+    deque->front = temp->next;
+    deque->front->before = NULL;
 
-        // QUESTION: return the node or just the data ??
-        return temp;
+    // if there is only one element, I have to change the back too
+    if (deque->size == 1) {
+        deque->back = deque->back->before; // == NULL
+        deque->back->next = NULL;          // necessary ????
     }
 
-    Deque *temp = deque->front;
-    deque->front = deque->front->next;
+    void *temp_data = temp->data;
+    free(temp);
+    deque->size--;
 
-    return temp;
+    return temp_data;
 }
 
 int size(Deque *deque) { return deque->size; }
 
 bool isEmpty(Deque *deque) { return deque->size == 0; }
 
-// WHEN TO STOP IS THE PROBLEM !!!!!
 void reverse(Deque *deque) {
-    while (deque->front && deque->back) {
+    int aux = 0;
+    while (deque->front && deque->back && !aux) {
         D_List *temp_front = deque->front->next;
         D_List *temp_back = deque->back->before;
 
@@ -114,15 +123,25 @@ void reverse(Deque *deque) {
 
         deque->front = temp_front;
         deque->back = temp_back;
+
+        // first case is for odd size queues, second is for even size queues
+        if (deque->front == deque->back || deque->front->next == deque->back)
+            aux = 1;
+
+        break;
     }
 }
 
 void printDeque(Deque *deque, void (*printFunc)(void *)) {
     D_List *temp = deque->front;
+    printf("X <-> ");
+
     while (temp) {
         printFunc(temp->data);
         temp = temp->next;
+        printf(" <-> ");
     }
+    printf("X\n");
 }
 
 void destroy(Deque *deque) {
