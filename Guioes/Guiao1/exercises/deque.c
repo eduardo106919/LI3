@@ -110,26 +110,34 @@ int size(Deque *deque) { return deque->size; }
 bool isEmpty(Deque *deque) { return deque->size == 0; }
 
 void reverse(Deque *deque) {
-    int aux = 0;
-    while (deque->front && deque->back && !aux) {
-        D_List *temp_front = deque->front->next;
-        D_List *temp_back = deque->back->before;
+    D_List *temp_front = deque->front;
+    D_List *temp_back = deque->back;
 
-        deque->front->next = deque->back->next;
-        deque->back->next = temp_front;
+    D_List *front = deque->front;
+    D_List *back = deque->back;
 
-        deque->back->before = deque->front->before;
-        deque->front->before = temp_back;
+    while (front && back && front != back && front != back->before) {
 
-        deque->front = temp_front;
-        deque->back = temp_back;
+        D_List *front_next = front->next;
+        D_List *back_prev = back->before;
+        // 1º:
+        front_next->before = back;
+        back_prev->next = front;
 
-        // first case is for odd size queues, second is for even size queues
-        if (deque->front == deque->back || deque->front->next == deque->back)
-            aux = 1;
+        // 2º:
+        front->next = back->next;
+        back->before = front->before;
 
-        break;
+        // 3º:
+        front->before = back_prev;
+        back->next = front_next;
+
+        front = front_next;
+        back = back_prev;
     }
+
+    deque->front = temp_back;
+    deque->back = temp_front;
 }
 
 void printDeque(Deque *deque, void (*printFunc)(void *)) {

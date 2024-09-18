@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     int count = 0;
     size_t len;
 
-    while((read = getline(&line, &len, fp)) != -1) {
+    while ((read = getline(&line, &len, fp)) != -1) {
         line[read - 1] = '\0'; // ignorar new line (\n)
         count += countWords(line);
     }

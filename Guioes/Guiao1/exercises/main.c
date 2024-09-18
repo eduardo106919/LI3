@@ -27,10 +27,16 @@ int main() {
     }
 
     printDeque(q, &print_int);
-    pop(q);
+    // printDeque(q, &print_int);
+
+    reverse(q);
+    puts("Reversed:");
     printDeque(q, &print_int);
-    popFront(q);
-    printDeque(q, &print_int);
+
+    // pop(q);
+    // printDeque(q, &print_int);
+    // popFront(q);
+    // printDeque(q, &print_int);
 
     free(q);
 
