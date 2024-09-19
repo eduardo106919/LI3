@@ -1,5 +1,5 @@
-#include "deque.h"
 #include "command_parser.h"
+#include "deque.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     while ((read = getline(&line, &len, fp)) != -1) {
         if (line[read - 1] == '\n')
             line[read - 1] = '\0';
-        
+
         Cmd *command = parseLine(line);
         processCommand(deque, command);
         free(command);

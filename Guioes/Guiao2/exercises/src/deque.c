@@ -9,7 +9,6 @@ Deque *create() {
     deque->last = NULL;
     deque->reversed = false;
     return deque;
-    
 }
 
 static void _push(Deque *deque, void *data) {
