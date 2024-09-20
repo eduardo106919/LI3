@@ -14,6 +14,7 @@ typedef struct d_list {
 typedef struct deque {
     int size;
     D_List *back, *front;
+    bool reversed;
 } Deque;
 
 // Function declarations

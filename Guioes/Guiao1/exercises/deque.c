@@ -5,78 +5,87 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* creates an empty deque */
 Deque *create() {
     Deque *new = calloc(1, sizeof(Deque));
-
-    // check if there is memory
-    assert(new != NULL);
-
-    new->size = 0;
-    new->back = new->front = NULL;
+    assert(new != NULL); // check if there is memory
 
     return new;
 }
 
+/* creates a node with data */
 D_List *create_node(void *data) {
     D_List *new_node = calloc(1, sizeof(D_List));
-    assert(new_node != NULL);
+    assert(new_node != NULL); // check if there is memory
 
     new_node->data = data;
-    new_node->before = new_node->next = NULL;
 
     return new_node;
 }
 
-void push(Deque *deque, void *data) {
+/* adds an element to the back of the deque */
+void push_aux(Deque *deque, void *data) {
     D_List *new_node = create_node(data);
 
-    if (deque->back == NULL && deque->front == NULL) {
+    // if the deque is empty
+    if (isEmpty(deque)) {
         deque->back = deque->front = new_node;
         deque->size++;
         return;
     }
 
-    /*          QUESTION
-        if there is only one element on the queue,
-        the cases in which the front is a node and
-        the back is NULL won't exist right?
-    */
-
+    // attach the new node
     deque->back->next = new_node;
     new_node->before = deque->back;
+    // replace the back
     deque->back = new_node;
     deque->size++;
 }
 
-void pushFront(Deque *deque, void *data) {
+/* adds an element to the front of the deque */
+void pushFront_aux(Deque *deque, void *data) {
     D_List *new_node = create_node(data);
 
-    if (deque->back == NULL && deque->front == NULL) {
+    // if the deque is empty
+    if (isEmpty(deque)) {
         deque->back = deque->front = new_node;
         deque->size++;
         return;
     }
 
+    // attach the new node
     deque->front->before = new_node;
     new_node->next = deque->front;
+    // replace the front
     deque->front = new_node;
     deque->size++;
 }
 
-void *pop(Deque *deque) {
+void push(Deque *deque, void *data) {
+    deque->reversed ? pushFront_aux(deque, data) : push_aux(deque, data);
+}
+
+void pushFront(Deque *deque, void *data) {
+    deque->reversed ? push_aux(deque, data) : pushFront_aux(deque, data);
+}
+
+/* removes the last node from the deque */
+void *pop_aux(Deque *deque) {
     if (isEmpty(deque))
         return NULL;
 
+    // detach the last node
     D_List *temp = deque->back;
     deque->back = temp->before;
-    deque->back->next = NULL;
 
     // if there is only one element, I have to change the front too
     if (deque->size == 1) {
         deque->front = deque->front->next; // == NULL
-        deque->front->before = NULL;       // necessary ????
+    } else {
+        temp->before->next = NULL;
     }
 
+    // free the space of the node
     void *temp_data = temp->data;
     free(temp);
     deque->size--;
@@ -84,20 +93,23 @@ void *pop(Deque *deque) {
     return temp_data;
 }
 
-void *popFront(Deque *deque) {
+/* removes the first node from the deque */
+void *popFront_aux(Deque *deque) {
     if (isEmpty(deque))
         return NULL;
 
+    // detach the front node
     D_List *temp = deque->front;
     deque->front = temp->next;
-    deque->front->before = NULL;
 
     // if there is only one element, I have to change the back too
     if (deque->size == 1) {
         deque->back = deque->back->before; // == NULL
-        deque->back->next = NULL;          // necessary ????
+    } else {
+        temp->next->before = NULL;
     }
 
+    // free the space of the node
     void *temp_data = temp->data;
     free(temp);
     deque->size--;
@@ -105,67 +117,45 @@ void *popFront(Deque *deque) {
     return temp_data;
 }
 
-int size(Deque *deque) { return deque->size; }
-
-bool isEmpty(Deque *deque) { return deque->size == 0; }
-
-void reverse(Deque *deque) {
-    D_List *temp_front = deque->front;
-    D_List *temp_back = deque->back;
-
-    D_List *front = deque->front;
-    D_List *back = deque->back;
-
-    while (front && back && front != back && front != back->before) {
-
-        D_List *front_next = front->next;
-        D_List *back_prev = back->before;
-        // 1º:
-        front_next->before = back;
-        back_prev->next = front;
-
-        // 2º:
-        front->next = back->next;
-        back->before = front->before;
-
-        // 3º:
-        front->before = back_prev;
-        back->next = front_next;
-
-        front = front_next;
-        back = back_prev;
-    }
-
-    deque->front = temp_back;
-    deque->back = temp_front;
+void *pop(Deque *deque) {
+    return deque->reversed ? popFront_aux(deque) : pop_aux(deque);
 }
 
+void *popFront(Deque *deque) {
+    return deque->reversed ? pop_aux(deque) : popFront_aux(deque);
+}
+
+/* returns the size of the deque */
+int size(Deque *deque) { return deque->size; }
+
+/* checks if the deque is empty */
+bool isEmpty(Deque *deque) { return deque->size == 0; }
+
+/* inverts the order of the deque */
+void reverse(Deque *deque) { deque->reversed = !deque->reversed; }
+
+/* shows the deque */
 void printDeque(Deque *deque, void (*printFunc)(void *)) {
-    D_List *temp = deque->front;
+    D_List *temp = !deque->reversed ? deque->front : deque->back;
     printf("X <-> ");
 
     while (temp) {
         printFunc(temp->data);
-        temp = temp->next;
+        temp = !deque->reversed ? temp->next : temp->before;
         printf(" <-> ");
     }
     printf("X\n");
 }
 
+/* frees the space allocated by the deque */
 void destroy(Deque *deque) {
-    while (deque->front && deque->back) {
-        D_List *temp_front = deque->front->next;
-        D_List *temp_back = deque->back->before;
+    D_List *front = deque->front;
 
-        if (deque->front == deque->back) {
-            free(deque->front);
-            return;
-        } else {
-            free(deque->front);
-            free(deque->back);
-        }
-
-        deque->front = temp_front;
-        deque->back = temp_back;
+    while (front) {
+        D_List *temp = front;
+        front = front->next;
+        free(temp);
     }
+
+    free(deque);
 }
