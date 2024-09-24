@@ -2,6 +2,7 @@
 #include "deque.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
     FILE *fp = NULL;
@@ -30,10 +31,21 @@ int main(int argc, char **argv) {
 
         Cmd *command = parseLine(line);
         processCommand(deque, command);
+
+        // free(command->args);
+        free(command->command);
         free(command);
     }
 
-    free(deque);
+    // free the allocated space from the deque
+    // int *data = (int *)pop(deque);
+    // while (data) {
+    //     free(data);
+    //     data = pop(deque);
+    // }
+
+    destroy(deque);
+    fclose(fp);
 
     return EXIT_SUCCESS;
 }

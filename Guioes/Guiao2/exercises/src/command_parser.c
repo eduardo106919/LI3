@@ -12,6 +12,7 @@ void printInt(void *i) {
     printf("%d", *i_);
 }
 
+/* returns the corresponding Operation */
 DequeOp cmdToOp(char *cmd) {
     if (!strcmp(cmd, "PUSH"))
         return PUSH;
@@ -85,22 +86,14 @@ Cmd *parseLine(char *line) {
     char *token = strsep(&line, " ");
     DequeOp operation = cmdToOp(token);
 
-    if (operation != NOTHING) {
-        new_command->command = strdup(token);
-    } else {
-        free(new_command->args);    // may not be necessary
-        free(new_command->command); // may not be necessary
-        free(new_command);
-
-        // the command is not valid, so it's not worth to create it
-        return NULL;
-    }
+    new_command->command = strdup(token);
 
     // no need to read the arguments, if it's not supposed to have arguments
     if ((operation != PUSH && operation != PUSH_FRONT) || line == NULL)
         return new_command;
 
     char *temp_copy = strdup(line);
+    char *aux_temp_copy = temp_copy;
 
     int count = 0;
     // count the number of arguments
@@ -127,7 +120,8 @@ Cmd *parseLine(char *line) {
         }
     }
 
-    free(temp_copy);
+    // if I use temp_copy, I am not in the begining of the string, this way I don't lose memory
+    free(aux_temp_copy);
 
     return new_command;
 }
