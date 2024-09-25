@@ -36,12 +36,20 @@ void processCommand(Deque *deque, Cmd *cmd) {
     switch (cmdToOp(cmd->command)) {
         case PUSH:
             for (int i = 0; i < cmd->nargs; i++) {
-                push(deque, cmd->args + i);
+                // allocate space for the integer
+                int *temp_back = (int *)calloc(1, sizeof(int));
+                assert(temp_back);
+                *temp_back = *(cmd->args + i);
+                push(deque, temp_back);
             }
             break;
         case PUSH_FRONT:
             for (int i = 0; i < cmd->nargs; i++) {
-                pushFront(deque, cmd->args + i);
+                // allocate space for the integer
+                int *temp_front = (int *)calloc(1, sizeof(int));
+                assert(temp_front);
+                *temp_front = *(cmd->args + i);
+                pushFront(deque, temp_front);
             }
             break;
         case POP:
@@ -120,7 +128,8 @@ Cmd *parseLine(char *line) {
         }
     }
 
-    // if I use temp_copy, I am not in the begining of the string, this way I don't lose memory
+    // if I use temp_copy, I am not in the begining of the string, this way I
+    // don't lose memory
     free(aux_temp_copy);
 
     return new_command;
