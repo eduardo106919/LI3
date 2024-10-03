@@ -59,6 +59,7 @@ void processCommand(Deque *deque, Cmd *cmd) {
             else {
                 printInt(value_back);
                 printf("\n");
+                free(value_back);
             }
             break;
         case POP_FRONT:
@@ -68,6 +69,7 @@ void processCommand(Deque *deque, Cmd *cmd) {
             else {
                 printInt(value_front);
                 printf("\n");
+                free(value_front);
             }
             break;
         case SIZE:
