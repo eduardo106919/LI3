@@ -22,7 +22,7 @@ typedef enum dequeOp {
     NOTHING
 } DequeOp;
 
-void processCommand(Deque *deque, Cmd *cmd);
+void processCommand(Deque *deque, const Cmd *cmd);
 Cmd *parseLine(char *line);
 
 #endif

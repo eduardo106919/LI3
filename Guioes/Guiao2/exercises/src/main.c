@@ -10,8 +10,7 @@ int main(int argc, char **argv) {
     if (argc < 2) {
         fp = stdin;
     } else {
-        char *filename = argv[1];
-        fp = fopen(filename, "r");
+        fp = fopen(argv[1], "r");
         if (!fp) {
             perror("Error");
             return EXIT_FAILURE;

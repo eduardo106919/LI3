@@ -8,12 +8,12 @@
 
 /* Prints the value of an integer pointer */
 void printInt(void *i) {
-    int *i_ = i;
+    const int *i_ = i;
     printf("%d", *i_);
 }
 
 /* returns the corresponding Operation */
-DequeOp cmdToOp(char *cmd) {
+DequeOp cmdToOp(const char *cmd) {
     if (!strcmp(cmd, "PUSH"))
         return PUSH;
     if (!strcmp(cmd, "PUSH_FRONT"))
@@ -32,7 +32,7 @@ DequeOp cmdToOp(char *cmd) {
     return NOTHING;
 }
 
-void processCommand(Deque *deque, Cmd *cmd) {
+void processCommand(Deque *deque, const Cmd *cmd) {
     switch (cmdToOp(cmd->command)) {
         case PUSH:
             for (int i = 0; i < cmd->nargs; i++) {
