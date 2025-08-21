@@ -12,18 +12,36 @@ O sistema deverá suportar as seguintes operações:
 
 ## Entidades
 
+Entidades identificadas:
+- Cliente (cartão de cidadão, nome, data de nascimento, morada)
+- Fila de espera (nome, coleção de clientes)
+- Balcão (id, nome, localização, horário de atentimento, coleção de clientes, coleção de filas de espera)
 
 
 ## Módulos
 
+Módulos identificados:
+- Gestor de clientes (coleção de clientes)
+- Gestor de balcões (coleção de balcões)
+- Catálogo, gestor global
+- Módulo de utilidade
+- Módulo de Input/Output
+
+Para consultar a informação de um cliente, basta aceder à coleção de clientes no gestor de clientes.
+Para consultar a lista de clientes de um balcão, selecionamos o balcão, pegamos no conteúdo da coleção de clientes, e requisitamos ao gestor de clientes a informação de cada cliente.
+Para adicionar um cliente de uma fila de espera, selecionamos o balcão, através do gestor, pegamos na coleção de filas de espera, procura-se a fila de espera desejada e adiciona-se o cliente.
+Para remover um cliente de uma fila de espera, selecionamos o balcão, através do gestor, pegamos na coleção de filas de espera, procura-se a fila de espera desejada e remove-se o cliente.
 
 
 ## Estruturas de Dados
 
+Estruturas de dados identificadas:
+- Hash table (gestor de clientes -> clientes | gestor de balcões -> balcões)
+- Max Heap (fila de espera -> clientes)
+- Lista Ligada (balcão -> filas de espera | balcão -> clientes)
 
 
 ## Arquitetura
 
-Colocar diagrama com os módulos e as suas ligações
-
+![Arquitetura do Balcão de Registo](./BalcaoRegisto.png)
 
